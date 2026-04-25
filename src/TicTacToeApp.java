@@ -3,36 +3,39 @@ import java.util.Scanner;
 
 /**
  * TicTacToe
- * UC1–UC7 implementation
- * - Display board
+ * UC1–UC8 implementation
+ * - Board display
  * - Toss & symbol assignment
  * - User input
  * - Slot → row/column conversion
  * - Move validation
  * - Place move
  * - Computer random move
+ * - Continuous game loop
  */
 
 public class TicTacToeApp {
 
     /* =========================================================
      * UC1: BOARD DECLARATION
-     * 3x3 board represented using a 2D array
-     * Each cell stores '-', 'X', or 'O'
      * ========================================================= */
     static char[][] board = new char[3][3];
 
     /* =========================================================
      * UC2: GAME STATE VARIABLES
-     * Tracks current turn and assigned symbols
      * ========================================================= */
     static boolean isHumanTurn;
     static char humanSymbol;
     static char computerSymbol;
 
+    /* =========================================================
+     * UC8: GAME LOOP CONTROL
+     * ========================================================= */
+    static boolean gameOver = false;
+
     /**
      * Entry point of the program
-     * Executes UC1 → UC7
+     * Executes UC1 → UC8
      */
     public static void main(String[] args) {
 
@@ -41,30 +44,37 @@ public class TicTacToeApp {
         displayTossResult();        // UC2
         printBoard();               // UC1
 
-        // Human move
-        int slot = getUserSlot();   // UC3
+        // UC8: Continuous game loop
+        while (!gameOver) {
 
-        int row = getRowFromSlot(slot);   // UC4
-        int col = getColFromSlot(slot);   // UC4
+            if (isHumanTurn) {
 
-        if (isValidMove(row, col)) {
-            placeMove(row, col, humanSymbol);   // UC6
-        } else {
-            System.out.println("Invalid move");
+                // Human turn
+                int slot = getUserSlot();        // UC3
+                int row = getRowFromSlot(slot);  // UC4
+                int col = getColFromSlot(slot);  // UC4
+
+                if (isValidMove(row, col)) {
+                    placeMove(row, col, humanSymbol);   // UC6
+                    isHumanTurn = false;                // switch turn
+                } else {
+                    System.out.println("Invalid move, try again.");
+                    continue;
+                }
+
+            } else {
+
+                // Computer turn
+                computerMove();   // UC7
+                isHumanTurn = true;  // switch turn
+            }
+
+            printBoard();   // show updated board
         }
-
-        printBoard();
-
-        // UC7: Computer move
-        computerMove();
-
-        System.out.println("\nAfter computer move:");
-        printBoard();
     }
 
     /**
      * UC1: Initialize board
-     * Fills all cells with '-'
      */
     static void initializeBoard() {
 
@@ -77,7 +87,6 @@ public class TicTacToeApp {
 
     /**
      * UC1: Print board
-     * Displays the 3x3 grid
      */
     static void printBoard() {
 
@@ -93,7 +102,6 @@ public class TicTacToeApp {
 
     /**
      * UC2: Toss logic
-     * Randomly decides first player and assigns symbols
      */
     static void tossAndAssignSymbols() {
 
@@ -128,7 +136,7 @@ public class TicTacToeApp {
     }
 
     /**
-     * UC3: Read user slot input (1–9)
+     * UC3: Get user slot input
      */
     static int getUserSlot() {
 
@@ -138,16 +146,14 @@ public class TicTacToeApp {
     }
 
     /**
-     * UC4: Convert slot to row index
-     * Formula: (slot - 1) / 3
+     * UC4: Slot → row
      */
     static int getRowFromSlot(int slot) {
         return (slot - 1) / 3;
     }
 
     /**
-     * UC4: Convert slot to column index
-     * Formula: (slot - 1) % 3
+     * UC4: Slot → column
      */
     static int getColFromSlot(int slot) {
         return (slot - 1) % 3;
@@ -155,8 +161,6 @@ public class TicTacToeApp {
 
     /**
      * UC5: Validate move
-     * - Row and column must be within 0–2
-     * - Target cell must be empty
      */
     static boolean isValidMove(int row, int col) {
 
@@ -172,8 +176,7 @@ public class TicTacToeApp {
     }
 
     /**
-     * UC6: Place move on board
-     * Updates board at given position with symbol
+     * UC6: Place move
      */
     static void placeMove(int row, int col, char symbol) {
         board[row][col] = symbol;
@@ -181,11 +184,6 @@ public class TicTacToeApp {
 
     /**
      * UC7: Computer random move
-     * - Generates random slot (1–9)
-     * - Converts to row/column
-     * - Validates move
-     * - Repeats until valid
-     * - Places computer symbol
      */
     static void computerMove() {
 
