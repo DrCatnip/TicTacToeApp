@@ -1,109 +1,75 @@
 import java.util.Random;
+import java.util.Scanner;
 
 public class TicTacToeApp {
 
     /*
      * UC1: Board Declaration
-     * A 2D array is used to represent the Tic-Tac-Toe board.
-     * It has 3 rows and 3 columns.
-     * Each cell will store either '-', 'X', or 'O'.
+     * 3x3 Tic-Tac-Toe board
      */
     static char[][] board = new char[3][3];
 
     /*
      * UC2: Game State Variables
-     * These variables help manage the game flow:
-     * - isHumanTurn → tracks whose turn it is
-     * - humanSymbol → symbol assigned to human player
-     * - computerSymbol → symbol assigned to computer
      */
     static boolean isHumanTurn;
     static char humanSymbol;
     static char computerSymbol;
 
     /*
-     * Main Method (Entry Point)
-     * Executes UC1 and UC2 in sequence:
-     * 1. Initialize the board with empty values
-     * 2. Perform toss to decide who starts
-     * 3. Display toss result and symbol assignment
-     * 4. Print the current board
+     * Main Method
+     * UC1 → UC2 → UC3
      */
     public static void main(String[] args) {
 
-        initializeBoard();          // UC1: create empty board
-        tossAndAssignSymbols();     // UC2: decide turn + symbols
-        displayTossResult();        // UC2: show result
-        printBoard();               // UC1: display board
+        initializeBoard();          // UC1
+        tossAndAssignSymbols();     // UC2
+        displayTossResult();        // UC2
+        printBoard();               // UC1
+
+        int slot = getUserSlot();   // UC3
+        System.out.println("Slot entered: " + slot);
     }
 
     /*
      * UC1: Initialize Board
-     * This method fills the entire board with '-'
-     * '-' represents an empty cell.
-     *
-     * Uses nested loops:
-     * - Outer loop → iterates rows
-     * - Inner loop → iterates columns
      */
     static void initializeBoard() {
-        for (int i = 0; i < 3; i++) {          // loop through rows
-            for (int j = 0; j < 3; j++) {      // loop through columns
-                board[i][j] = '-';             // assign empty symbol
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board[i][j] = '-';
             }
         }
     }
 
     /*
      * UC1: Print Board
-     * Displays the current state of the board on console.
-     *
-     * Example Output:
-     * - - -
-     * - - -
-     * - - -
-     *
-     * Uses nested loops to print each cell.
      */
     static void printBoard() {
         System.out.println("Tic-Tac-Toe Board:");
 
-        for (int i = 0; i < 3; i++) {          // loop rows
-            for (int j = 0; j < 3; j++) {      // loop columns
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
                 System.out.print(board[i][j] + " ");
             }
-            System.out.println();              // move to next line after each row
+            System.out.println();
         }
     }
 
     /*
-     * UC2: Toss and Assign Symbols
-     * This method simulates a coin toss using Random class.
-     *
-     * Logic:
-     * - Generate a random number (0 or 1)
-     * - If 0 → Human starts first
-     * - If 1 → Computer starts first
-     *
-     * Symbol Assignment:
-     * - First player always gets 'X'
-     * - Second player gets 'O'
-     *
-     * Concepts used:
-     * - Random number generation
-     * - Conditional logic (if-else)
+     * UC2: Toss Logic
      */
     static void tossAndAssignSymbols() {
 
-        Random rand = new Random();        // create Random object
-        int toss = rand.nextInt(2);        // generate 0 or 1
+        Random rand = new Random();
+        int toss = rand.nextInt(2);
 
         if (toss == 0) {
-            isHumanTurn = true;            // human starts
-            humanSymbol = 'X';             // first player gets X
-            computerSymbol = 'O';          // second player gets O
+            isHumanTurn = true;
+            humanSymbol = 'X';
+            computerSymbol = 'O';
         } else {
-            isHumanTurn = false;           // computer starts
+            isHumanTurn = false;
             humanSymbol = 'O';
             computerSymbol = 'X';
         }
@@ -111,12 +77,6 @@ public class TicTacToeApp {
 
     /*
      * UC2: Display Toss Result
-     * Displays:
-     * - Who won the toss
-     * - Assigned symbols
-     * - Who plays first
-     *
-     * Uses conditional logic based on isHumanTurn variable.
      */
     static void displayTossResult() {
 
@@ -131,5 +91,18 @@ public class TicTacToeApp {
             System.out.println("Computer is: " + computerSymbol);
             System.out.println("Computer plays first.");
         }
+    }
+
+    /*
+     * UC3: Accept User Slot Input (1–9)
+     */
+    static int getUserSlot() {
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter slot (1-9): ");
+        int slot = scanner.nextInt();
+
+        return slot;
     }
 }
