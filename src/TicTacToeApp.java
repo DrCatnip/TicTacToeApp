@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 /**
  * TicTacToe
- * UC1–UC8 implementation
+ * UC1–UC9 implementation
  * - Board display
  * - Toss & symbol assignment
  * - User input
@@ -11,7 +11,8 @@ import java.util.Scanner;
  * - Move validation
  * - Place move
  * - Computer random move
- * - Continuous game loop
+ * - Game loop
+ * - Win detection
  */
 
 public class TicTacToeApp {
@@ -33,30 +34,34 @@ public class TicTacToeApp {
      * ========================================================= */
     static boolean gameOver = false;
 
-    /**
-     * Entry point of the program
-     * Executes UC1 → UC8
-     */
     public static void main(String[] args) {
 
-        initializeBoard();          // UC1
-        tossAndAssignSymbols();     // UC2
-        displayTossResult();        // UC2
-        printBoard();               // UC1
+        initializeBoard();
+        tossAndAssignSymbols();
+        displayTossResult();
+        printBoard();
 
-        // UC8: Continuous game loop
         while (!gameOver) {
 
             if (isHumanTurn) {
 
-                // Human turn
-                int slot = getUserSlot();        // UC3
-                int row = getRowFromSlot(slot);  // UC4
-                int col = getColFromSlot(slot);  // UC4
+                int slot = getUserSlot();
+                int row = getRowFromSlot(slot);
+                int col = getColFromSlot(slot);
 
                 if (isValidMove(row, col)) {
-                    placeMove(row, col, humanSymbol);   // UC6
-                    isHumanTurn = false;                // switch turn
+                    placeMove(row, col, humanSymbol);
+
+                    // UC9: Check win
+                    if (hasWon(humanSymbol)) {
+                        printBoard();
+                        System.out.println("You win!");
+                        gameOver = true;
+                        break;
+                    }
+
+                    isHumanTurn = false;
+
                 } else {
                     System.out.println("Invalid move, try again.");
                     continue;
@@ -64,12 +69,20 @@ public class TicTacToeApp {
 
             } else {
 
-                // Computer turn
-                computerMove();   // UC7
-                isHumanTurn = true;  // switch turn
+                computerMove();
+
+                // UC9: Check win
+                if (hasWon(computerSymbol)) {
+                    printBoard();
+                    System.out.println("Computer wins!");
+                    gameOver = true;
+                    break;
+                }
+
+                isHumanTurn = true;
             }
 
-            printBoard();   // show updated board
+            printBoard();
         }
     }
 
@@ -136,7 +149,7 @@ public class TicTacToeApp {
     }
 
     /**
-     * UC3: Get user slot input
+     * UC3: Get user input
      */
     static int getUserSlot() {
 
@@ -183,7 +196,7 @@ public class TicTacToeApp {
     }
 
     /**
-     * UC7: Computer random move
+     * UC7: Computer move
      */
     static void computerMove() {
 
@@ -201,5 +214,45 @@ public class TicTacToeApp {
                 break;
             }
         }
+    }
+
+    /**
+     * UC9: Check winning condition
+     * Checks rows, columns, and diagonals
+     */
+    static boolean hasWon(char symbol) {
+
+        // Check rows
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] == symbol &&
+                    board[i][1] == symbol &&
+                    board[i][2] == symbol) {
+                return true;
+            }
+        }
+
+        // Check columns
+        for (int i = 0; i < 3; i++) {
+            if (board[0][i] == symbol &&
+                    board[1][i] == symbol &&
+                    board[2][i] == symbol) {
+                return true;
+            }
+        }
+
+        // Check diagonals
+        if (board[0][0] == symbol &&
+                board[1][1] == symbol &&
+                board[2][2] == symbol) {
+            return true;
+        }
+
+        if (board[0][2] == symbol &&
+                board[1][1] == symbol &&
+                board[2][0] == symbol) {
+            return true;
+        }
+
+        return false;
     }
 }
