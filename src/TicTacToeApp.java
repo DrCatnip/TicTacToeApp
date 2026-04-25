@@ -3,12 +3,13 @@ import java.util.Scanner;
 
 /**
  * TicTacToe
- * UC1–UC5 implementation
+ * UC1–UC6 implementation
  * - Board display
  * - Toss and symbol assignment
  * - User input
  * - Slot → row/column conversion
  * - Move validation
+ * - Place move on board
  */
 
 public class TicTacToeApp {
@@ -29,7 +30,7 @@ public class TicTacToeApp {
 
     /**
      * Entry point of the program
-     * Executes UC1 → UC5
+     * Executes UC1 → UC6
      */
     public static void main(String[] args) {
 
@@ -45,9 +46,16 @@ public class TicTacToeApp {
 
         // UC5: Validate move
         if (isValidMove(row, col)) {
-            System.out.println("Valid move");
+
+            // UC6: Place move
+            placeMove(row, col, humanSymbol);
+
+            System.out.println("Move placed successfully!\n");
+
+            printBoard();   // show updated board
+
         } else {
-            System.out.println("Invalid move");
+            System.out.println("Invalid move!");
         }
     }
 
@@ -158,5 +166,18 @@ public class TicTacToeApp {
         }
 
         return true;
+    }
+
+    /**
+     * UC6: Place move on board
+     * Updates the board with the given symbol
+     *
+     * Input:
+     * row → position row
+     * col → position column
+     * symbol → 'X' or 'O'
+     */
+    static void placeMove(int row, int col, char symbol) {
+        board[row][col] = symbol;
     }
 }
