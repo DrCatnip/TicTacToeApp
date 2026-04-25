@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 /**
  * TicTacToe
- * UC1–UC9 implementation
+ * UC1–UC10 implementation
  * - Board display
  * - Toss & symbol assignment
  * - User input
@@ -13,6 +13,7 @@ import java.util.Scanner;
  * - Computer random move
  * - Game loop
  * - Win detection
+ * - Draw detection
  */
 
 public class TicTacToeApp {
@@ -60,6 +61,14 @@ public class TicTacToeApp {
                         break;
                     }
 
+                    // UC10: Check draw
+                    if (isDraw()) {
+                        printBoard();
+                        System.out.println("It's a draw!");
+                        gameOver = true;
+                        break;
+                    }
+
                     isHumanTurn = false;
 
                 } else {
@@ -75,6 +84,14 @@ public class TicTacToeApp {
                 if (hasWon(computerSymbol)) {
                     printBoard();
                     System.out.println("Computer wins!");
+                    gameOver = true;
+                    break;
+                }
+
+                // UC10: Check draw
+                if (isDraw()) {
+                    printBoard();
+                    System.out.println("It's a draw!");
                     gameOver = true;
                     break;
                 }
@@ -217,12 +234,11 @@ public class TicTacToeApp {
     }
 
     /**
-     * UC9: Check winning condition
-     * Checks rows, columns, and diagonals
+     * UC9: Check win condition
      */
     static boolean hasWon(char symbol) {
 
-        // Check rows
+        // Rows
         for (int i = 0; i < 3; i++) {
             if (board[i][0] == symbol &&
                     board[i][1] == symbol &&
@@ -231,7 +247,7 @@ public class TicTacToeApp {
             }
         }
 
-        // Check columns
+        // Columns
         for (int i = 0; i < 3; i++) {
             if (board[0][i] == symbol &&
                     board[1][i] == symbol &&
@@ -240,7 +256,7 @@ public class TicTacToeApp {
             }
         }
 
-        // Check diagonals
+        // Diagonals
         if (board[0][0] == symbol &&
                 board[1][1] == symbol &&
                 board[2][2] == symbol) {
@@ -254,5 +270,22 @@ public class TicTacToeApp {
         }
 
         return false;
+    }
+
+    /**
+     * UC10: Check draw condition
+     * Returns true if no empty cells remain
+     */
+    static boolean isDraw() {
+
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 3; c++) {
+                if (board[r][c] == '-') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
