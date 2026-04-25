@@ -3,26 +3,28 @@ import java.util.Scanner;
 
 /**
  * TicTacToe
- * UC1–UC6 implementation
- * - Board display
- * - Toss and symbol assignment
+ * UC1–UC7 implementation
+ * - Display board
+ * - Toss & symbol assignment
  * - User input
  * - Slot → row/column conversion
  * - Move validation
- * - Place move on board
+ * - Place move
+ * - Computer random move
  */
 
 public class TicTacToeApp {
 
     /* =========================================================
      * UC1: BOARD DECLARATION
-     * 3x3 board using 2D array
+     * 3x3 board represented using a 2D array
+     * Each cell stores '-', 'X', or 'O'
      * ========================================================= */
     static char[][] board = new char[3][3];
 
     /* =========================================================
      * UC2: GAME STATE VARIABLES
-     * Tracks turn and symbols
+     * Tracks current turn and assigned symbols
      * ========================================================= */
     static boolean isHumanTurn;
     static char humanSymbol;
@@ -30,7 +32,7 @@ public class TicTacToeApp {
 
     /**
      * Entry point of the program
-     * Executes UC1 → UC6
+     * Executes UC1 → UC7
      */
     public static void main(String[] args) {
 
@@ -39,28 +41,30 @@ public class TicTacToeApp {
         displayTossResult();        // UC2
         printBoard();               // UC1
 
+        // Human move
         int slot = getUserSlot();   // UC3
 
         int row = getRowFromSlot(slot);   // UC4
         int col = getColFromSlot(slot);   // UC4
 
-        // UC5: Validate move
         if (isValidMove(row, col)) {
-
-            // UC6: Place move
-            placeMove(row, col, humanSymbol);
-
-            System.out.println("Move placed successfully!\n");
-
-            printBoard();   // show updated board
-
+            placeMove(row, col, humanSymbol);   // UC6
         } else {
-            System.out.println("Invalid move!");
+            System.out.println("Invalid move");
         }
+
+        printBoard();
+
+        // UC7: Computer move
+        computerMove();
+
+        System.out.println("\nAfter computer move:");
+        printBoard();
     }
 
     /**
-     * UC1: Initialize board with '-'
+     * UC1: Initialize board
+     * Fills all cells with '-'
      */
     static void initializeBoard() {
 
@@ -73,6 +77,7 @@ public class TicTacToeApp {
 
     /**
      * UC1: Print board
+     * Displays the 3x3 grid
      */
     static void printBoard() {
 
@@ -87,7 +92,8 @@ public class TicTacToeApp {
     }
 
     /**
-     * UC2: Toss logic and symbol assignment
+     * UC2: Toss logic
+     * Randomly decides first player and assigns symbols
      */
     static void tossAndAssignSymbols() {
 
@@ -114,12 +120,10 @@ public class TicTacToeApp {
             System.out.println("You won the toss!");
             System.out.println("You are: " + humanSymbol);
             System.out.println("Computer is: " + computerSymbol);
-            System.out.println("You play first.");
         } else {
             System.out.println("Computer won the toss!");
             System.out.println("You are: " + humanSymbol);
             System.out.println("Computer is: " + computerSymbol);
-            System.out.println("Computer plays first.");
         }
     }
 
@@ -129,7 +133,6 @@ public class TicTacToeApp {
     static int getUserSlot() {
 
         Scanner scanner = new Scanner(System.in);
-
         System.out.print("Enter slot (1-9): ");
         return scanner.nextInt();
     }
@@ -152,8 +155,8 @@ public class TicTacToeApp {
 
     /**
      * UC5: Validate move
-     * - Row & column must be within 0–2
-     * - Cell must be empty ('-')
+     * - Row and column must be within 0–2
+     * - Target cell must be empty
      */
     static boolean isValidMove(int row, int col) {
 
@@ -170,14 +173,35 @@ public class TicTacToeApp {
 
     /**
      * UC6: Place move on board
-     * Updates the board with the given symbol
-     *
-     * Input:
-     * row → position row
-     * col → position column
-     * symbol → 'X' or 'O'
+     * Updates board at given position with symbol
      */
     static void placeMove(int row, int col, char symbol) {
         board[row][col] = symbol;
+    }
+
+    /**
+     * UC7: Computer random move
+     * - Generates random slot (1–9)
+     * - Converts to row/column
+     * - Validates move
+     * - Repeats until valid
+     * - Places computer symbol
+     */
+    static void computerMove() {
+
+        Random rand = new Random();
+
+        while (true) {
+
+            int slot = rand.nextInt(9) + 1;
+
+            int row = getRowFromSlot(slot);
+            int col = getColFromSlot(slot);
+
+            if (isValidMove(row, col)) {
+                placeMove(row, col, computerSymbol);
+                break;
+            }
+        }
     }
 }
